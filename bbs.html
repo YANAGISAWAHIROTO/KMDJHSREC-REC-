@@ -2,47 +2,70 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>観測掲示板｜委員会内部用</title>
+  <title>観測掲示板</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body{background:#0e0e0e;color:#e0e0e0;font-family:system-ui,sans-serif;margin:0;padding:12px}
-    h1{font-size:20px;text-align:center}
-    .box{border:1px solid #333;padding:10px;margin-bottom:12px}
-    input,textarea,select,button{width:100%;margin-top:6px;background:#111;color:#fff;border:1px solid #444;padding:6px}
-    button{cursor:pointer}
-    .post{border-top:1px dashed #333;padding:6px 0;font-size:14px}
-    .meta{color:#aaa;font-size:12px}
+    body { background:#111; color:#eee; font-family: system-ui; margin:0; padding:12px; }
+    h1 { text-align:center; }
+    .box { border:1px solid #333; padding:10px; margin-bottom:12px; }
+    input, textarea, select, button {
+      width:100%; margin-top:6px; background:#000; color:#fff; border:1px solid #444; padding:6px;
+    }
+    .post { border-top:1px dashed #333; padding:6px 0; }
+    .meta { font-size:12px; color:#aaa; }
   </style>
 </head>
 <body>
-<h1>月次観測掲示板</h1>
-<div class="box">
-  <label>観測月</label>
-  <select id="month"></select>
-  <label>コードネーム（任意）</label>
-  <input id="name" placeholder="名無し委員">
-  <label>観測内容</label>
-  <textarea id="content" rows="4"></textarea>
-  <button onclick="post()">記録する</button>
-</div>
-<div class="box" id="posts"></div>
-<script>
-  const monthSelect=document.getElementById('month');
-  const postsDiv=document.getElementById('posts');
-  for(let y=2025;y<=2027;y++){
-    for(let m=1;m<=12;m++){
-      const v=`${y}-${String(m).padStart(2,'0')}`;
-      const o=document.createElement('option');o.value=v;o.textContent=v;monthSelect.appendChild(o);
+  <h1>月次観測掲示板</h1>
+
+  <div class="box">
+    <select id="month"></select>
+    <input id="name" placeholder="名無し委員">
+    <textarea id="content" rows="4"></textarea>
+    <button onclick="post()">書き込む</button>
+  </div>
+
+  <div class="box" id="posts"></div>
+
+  <script>
+    const month = document.getElementById('month');
+    const posts = document.getElementById('posts');
+
+    for (let y=2025;y<=2027;y++){
+      for(let m=1;m<=12;m++){
+        const v=`${y}-${String(m).padStart(2,'0')}`;
+        const o=document.createElement('option');
+        o.value=v;o.textContent=v;month.appendChild(o);
+      }
     }
-  }
-  function load(){postsDiv.innerHTML='';const key='bbs_'+monthSelect.value;const data=JSON.parse(localStorage.getItem(key)||'[]');
-    data.forEach(p=>{const d=document.createElement('div');d.className='post';d.innerHTML=`<div class=meta>${p.time}｜${p.name}</div>${p.text}`;postsDiv.appendChild(d)});
-  }
-  function post(){const key='bbs_'+monthSelect.value;const data=JSON.parse(localStorage.getItem(key)||'[]');
-    data.push({name:document.getElementById('name').value||'名無し委員',text:document.getElementById('content').value,time:new Date().toLocaleString()});
-    localStorage.setItem(key,JSON.stringify(data));document.getElementById('content').value='';load();
-  }
-  monthSelect.onchange=load;load();
-</script>
+
+    function load(){
+      posts.innerHTML='';
+      const key='bbs_'+month.value;
+      const data=JSON.parse(localStorage.getItem(key)||'[]');
+      data.forEach(p=>{
+        const d=document.createElement('div');
+        d.className='post';
+        d.innerHTML=`<div class='meta'>${p.time}｜${p.name}</div>${p.text}`;
+        posts.appendChild(d);
+      });
+    }
+
+    function post(){
+      const key='bbs_'+month.value;
+      const data=JSON.parse(localStorage.getItem(key)||'[]');
+      data.push({
+        name: document.getElementById('name').value || '名無し委員',
+        text: document.getElementById('content').value,
+        time: new Date().toLocaleString()
+      });
+      localStorage.setItem(key,JSON.stringify(data));
+      document.getElementById('content').value='';
+      load();
+    }
+
+    month.onchange=load;
+    load();
+  </script>
 </body>
-                     </html>
+</html>
