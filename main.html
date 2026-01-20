@@ -54,12 +54,37 @@
   <div class="overlay" id="overlay">
     <div>
       <div>REC "KMDJHSREC" について</div>
-      <img src="rec_help.png">
+      <img id="helpImg" src="1.png">
+      <div style="margin-top:10px;">
+        <button onclick="prevImg()">◀</button>
+        <button onclick="nextImg()">▶</button>
+      </div>
       <div onclick="closeHelp()" style="margin-top:10px;cursor:pointer;">閉じる</div>
     </div>
   </div>
 
   <script>
+    let imgIndex = 1;
+    const maxImg = 6;
+    function openHelp() {
+      document.getElementById('overlay').style.display = 'flex';
+      updateImg();
+    }
+    function closeHelp() {
+      document.getElementById('overlay').style.display = 'none';
+    }
+    function updateImg(){
+      document.getElementById('helpImg').src = imgIndex + '.png';
+    }
+    function nextImg(){
+      if(imgIndex < maxImg) imgIndex++;
+      updateImg();
+    }
+    function prevImg(){
+      if(imgIndex > 1) imgIndex--;
+      updateImg();
+    }
+  </script>
     function openHelp() {
       document.getElementById('overlay').style.display = 'flex';
     }
